@@ -1,0 +1,16 @@
+body{
+  font-family: Poppins;
+  font-weight: bold;
+  background-color: hsl(237, 49%, 15%);
+  color: #fff;
+  margin: 0px
+;
+}
+
+* {
+  font-family: Poppins;
+}
+
+p {
+  margin: 8px 0px;
+}
