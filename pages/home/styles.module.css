@@ -1,0 +1,41 @@
+.container{
+  background-color: hsl(237, 49%, 15%);
+  width: 100vw;
+  height: 100vh;
+}
+
+.wrapper{
+  width: 700px;
+  margin: auto;
+  padding: 50px 0px;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.playBtn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 8px 24px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+  color: cornflowerblue;
+}
+
+.handsBar{
+  text-align: center;
+  animation: 300ms fadeIn ease-out;
+}
+
+.winner{
+  text-align: center;
+  margin-top: 50px;
+  animation: 1s appear ease-out;
+}
