@@ -1,0 +1,36 @@
+.hands{
+  border-radius: 100%;
+  background-color: white;
+  margin: 20px;
+  cursor: pointer;
+}
+
+.large {
+  border: 10px solid salmon;
+  height: 150px;
+  padding: 40px;
+  width: 150px;
+}
+
+.small {
+  border: 4px solid salmon;
+  height: 60px;
+  padding: 12px;
+  width: 60px;
+}
+
+.hands:hover{
+  background-color: #ABF5D1;
+}
+
+.rock{
+  border-color: #db3352;
+}
+
+.paper{
+  border-color: #5671f5;
+}
+
+.scissors{
+  border-color: #eca922;
+}

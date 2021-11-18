@@ -1,0 +1,20 @@
+.scoreBar{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid aliceblue;
+  border-bottom: 2px solid aliceblue;
+  margin: 20px auto;
+  padding:  0px 16px;
+}
+
+.playerSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.score {
+  color: hotpink;
+  margin: auto 16px;
+}

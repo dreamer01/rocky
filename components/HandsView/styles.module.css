@@ -1,0 +1,63 @@
+.wrapper{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.imageView{
+  width: 250px;
+}
+
+.animateLeft{
+  transform-origin: left center;
+  animation: swing 1s ease-in infinite ;
+}
+
+.animateRight{
+  transform-origin: right center;
+  animation: swingR 1s ease-in infinite ;
+}
+
+.selectedOption {
+  animation: 500ms fadeIn ease-out;
+}
+
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
+  }50% {
+    opacity: 0;
+  }100%{
+    opacity: 1;
+  }
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform:translate(0px, 3px);
+  }
+  100% {
+    opacity: 1;
+    transform:translate(0px, 0px);
+  }
+}
+
+
+@keyframes swing { 
+  10% { transform: rotate(10deg); }
+  20% { transform: rotate(20deg); } 
+  30% { transform: rotate(10deg); } 
+  40% { transform: rotate(0deg); } 
+  50% { transform: rotate(-10deg); } 
+  60% { transform: rotate(-20deg); }
+} 
+
+@keyframes swingR { 
+  10% { transform: rotate(-10deg); }
+  20% { transform: rotate(-20deg); } 
+  30% { transform: rotate(-10deg); } 
+  40% { transform: rotate(0deg); } 
+  50% { transform: rotate(10deg); } 
+  60% { transform: rotate(20deg); }
+} 
