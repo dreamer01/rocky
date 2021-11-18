@@ -1,13 +1,12 @@
-import type { NextPage } from 'next';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import type { NextPage } from 'next';
 
-import Hands from '../../components/SelectGesture/Hands';
 import ScoreBar from '../../components/ScoreBar';
-import Styles from './styles.module.css';
 import SelectGesture from '../../components/SelectGesture';
 import HandsView from '../../components/HandsView';
+import Styles from './styles.module.css';
 
 const Home: NextPage = () => {
   const [userValue, selectValue] = useState('');
