@@ -1,19 +1,26 @@
 import Image from 'next/image';
 
+import CountDown from '../CountDown';
 import Styles from './styles.module.css';
 
 type Props = {
   className?: string;
   left: string;
   right: string;
+  reset?: () => void;
+  duration?: number;
 };
 
-const HandsView = ({ className, left, right }: Props): JSX.Element => {
+const HandsView = ({
+  className,
+  left,
+  right,
+  reset,
+  duration,
+}: Props): JSX.Element => {
   return (
     <div className={`${Styles.wrapper} ${className}`}>
-      <div
-        className={`${Styles.imageView} ${right ? '' : Styles.animateLeft} `}
-      >
+      <div className={`${Styles.imageView} ${left ? '' : Styles.animateLeft} `}>
         {left ? (
           <Image
             src={`/assets/left-${left}.webp`}
@@ -31,6 +38,9 @@ const HandsView = ({ className, left, right }: Props): JSX.Element => {
           />
         )}
       </div>
+      {duration && left && right && (
+        <CountDown onEnd={reset} duration={duration} />
+      )}
       <div
         className={`${Styles.imageView} ${right ? '' : Styles.animateRight} `}
       >
