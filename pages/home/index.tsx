@@ -12,11 +12,18 @@ const Home: NextPage = () => {
   const [userValue, selectValue] = useState('');
   const [botValue, setBotValue] = useState('');
   const [winner, setWinner] = useState('');
+  const [countdown, setCountdown] = useState(5);
   const [scores, setScores] = useState([
     { name: 'You', score: 0 },
     { name: 'Ties', score: 0 },
     { name: 'Bot', score: 0 },
   ]);
+
+  const reset = () => {
+    selectValue('');
+    setBotValue('');
+    setWinner('');
+  };
 
   // After UserValue Generate BotValue
   useEffect(() => {
@@ -84,12 +91,6 @@ const Home: NextPage = () => {
           setScores(newScore);
           break;
       }
-      setTimeout(() => {
-        console.log('Resetting...', { userValue, botValue, winner });
-        selectValue('');
-        setBotValue('');
-        setWinner('');
-      }, 3000);
     }
   }, [winner]);
 
@@ -118,7 +119,12 @@ const Home: NextPage = () => {
           </Link>
         </div>
         <ScoreBar scores={scores} />
-        <HandsView left={userValue} right={botValue} />
+        <HandsView
+          left={userValue}
+          right={botValue}
+          reset={reset}
+          duration={3000}
+        />
         {!userValue && (
           <SelectGesture
             className={Styles.handsBar}
