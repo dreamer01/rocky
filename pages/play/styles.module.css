@@ -1,0 +1,56 @@
+.container{
+  width: 100vw;
+  height: 100vh;
+}
+
+.wrapper{
+  width: 700px;
+  margin: auto;
+  padding: 50px 0px;
+}
+
+.header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.playground{
+  margin-top: 60px;
+  /* display: flex;
+  justify-content: center; */
+}
+
+.playerName{
+  color: #ABF5D1;
+}
+
+.input{
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 2px solid #88adff;
+  width: 200px; 
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #36B37E;
+  border: 2px solid #36B37E;
+  border: none;
+  width: 100px; 
+  color: #fff;
+  margin-left: 20px;
+}
+
+
+.rulesBtn{
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 2px solid #36B37E;
+  border: none;
+  width: 100px; 
+  color: darkslateblue;
+  margin-bottom: 20px;
+}
