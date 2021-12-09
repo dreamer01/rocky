@@ -1,0 +1,28 @@
+
+.input{
+  padding: 8px 12px;
+  border-radius: 5px;
+  border: 2px solid #88adff;
+  width: 200px; 
+}
+
+.select{
+  width: 228px; 
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #FF8B00;
+  border: 2px solid #FF8B00;
+  border: none;
+  width: 228px; 
+  color: #fff;
+  margin-top: 20px;
+}
+
+.enter{
+  margin-left: 20px;
+  background-color: #36B37E;
+  border: 2px solid #36B37E;
+}
