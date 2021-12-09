@@ -130,14 +130,19 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
   // Set Player ready for next round
   const setReady = () => {
     if (gameData) {
-      const { currentRound = {} } = gameData;
-      let updatedRound = {
-        ...currentRound,
-        players: {
-          ...(currentRound.players ? currentRound.players : {}),
-          ...{ [player]: { status: 'ready' } },
-        },
-      };
+      let updatedRound;
+      const { currentRound } = gameData;
+      if (currentRound.players) {
+        updatedRound = {
+          ...currentRound,
+          players: {
+            ...(currentRound.players ? currentRound.players : {}),
+            ...{ [player]: { status: 'ready' } },
+          },
+        };
+      } else {
+        updatedRound = { players: { [player]: { status: 'ready' } } };
+      }
       set(ref(database, 'games/' + gameId + '/currentRound'), updatedRound);
     }
   };
