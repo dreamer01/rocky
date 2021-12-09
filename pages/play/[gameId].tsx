@@ -15,7 +15,6 @@ export type Player = {
   name: string;
   pin: string;
   wins: number;
-  id: number;
 };
 
 export type GameData = {
@@ -24,9 +23,12 @@ export type GameData = {
     ties: number;
   };
   currentRound: {
-    [k in string]: {
-      value?: string;
-      status: string;
+    winner: string;
+    players: {
+      [k in string]: {
+        value?: string;
+        status: string;
+      };
     };
   };
 };
@@ -70,16 +72,12 @@ const Game: NextPage = () => {
   };
 
   const checkPin = (playerName: string) => {
-    const playerDetails =
-      gameData.players.find((p) => p.name === playerName) || null;
-    if (playerDetails && playerDetails.pin === pin) setActivePlayer(playerName);
-  };
-
-  // Reset Round
-  const endRound = (): void => {
-    const updatedData = { ...gameData };
-    updatedData.currentRound = {};
-    set(ref(database, 'games/' + gameId), updatedData);
+    if (gameData) {
+      const playerDetails =
+        gameData.players.find((p) => p.name === playerName) || null;
+      if (playerDetails && playerDetails.pin === pin)
+        setActivePlayer(playerName);
+    }
   };
 
   if (!gameId) return null;
@@ -107,12 +105,12 @@ const Game: NextPage = () => {
             <div>
               {!gameData || gameData.players.length < 1 ? (
                 activePlayer ? (
-                  <PlayGround gameId={gameId} player={activePlayer} />
+                  <PlayGround gameId={gameId as string} player={activePlayer} />
                 ) : (
                   <AddPlayer addPlayer={addPlayer} />
                 )
               ) : activePlayer ? (
-                <PlayGround gameId={gameId} player={activePlayer} />
+                <PlayGround gameId={gameId as string} player={activePlayer} />
               ) : gameData.players.length === 2 ? (
                 <SelectPlayer
                   players={gameData.players}

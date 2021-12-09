@@ -14,3 +14,7 @@ body{
 p {
   margin: 8px 0px;
 }
+
+button {
+  cursor: pointer;
+}

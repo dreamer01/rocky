@@ -23,53 +23,68 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     gameData.players.length === 2 &&
     gameData.players.filter((p) => p.name !== player)[0].name;
 
-  const findWinner = () => {
-    const currentPlayer = gameData.currentRound[player];
-    let winner = 'ties';
+  const findWinner = (): string => {
+    if (gameData && otherPlayerName) {
+      const currentPlayer = gameData.currentRound.players[player];
+      let winner = 'ties';
 
-    if (
-      gameData &&
-      currentPlayer.value !== gameData.currentRound[otherPlayerName].value
-    ) {
-      switch (currentPlayer.value) {
-        case 'rock':
-          if (gameData.currentRound[otherPlayerName].value === 'paper') {
-            winner = otherPlayerName;
-          } else winner = player;
-          break;
-        case 'paper':
-          if (gameData.currentRound[otherPlayerName].value === 'scissors') {
-            winner = otherPlayerName;
-          } else winner = player;
-          break;
-        case 'scissors':
-          if (gameData.currentRound[otherPlayerName].value === 'rock') {
-            winner = otherPlayerName;
-          } else winner = player;
-          break;
+      if (
+        gameData &&
+        currentPlayer.value !==
+          gameData.currentRound.players[otherPlayerName].value
+      ) {
+        switch (currentPlayer.value) {
+          case 'rock':
+            if (
+              gameData.currentRound.players[otherPlayerName].value === 'paper'
+            ) {
+              winner = otherPlayerName;
+            } else winner = player;
+            break;
+          case 'paper':
+            if (
+              gameData.currentRound.players[otherPlayerName].value ===
+              'scissors'
+            ) {
+              winner = otherPlayerName;
+            } else winner = player;
+            break;
+          case 'scissors':
+            if (
+              gameData.currentRound.players[otherPlayerName].value === 'rock'
+            ) {
+              winner = otherPlayerName;
+            } else winner = player;
+            break;
+        }
       }
-    }
-    return winner;
+      return winner;
+    } else return 'ties';
   };
 
   // Set Score and reset current round
   const reset = () => {
-    const updatedData = { ...gameData };
-    if (gameData.currentRound.winner === 'ties') {
-      updatedData.meta.ties = updatedData.meta.ties + 1;
-    } else {
-      updatedData.players?.forEach((player) => {
-        if (player.name === gameData.currentRound.winner) {
-          player.wins = player.wins + 1;
-        }
-      });
-    }
+    if (gameData && otherPlayerName) {
+      const updatedData = { ...gameData };
+      if (gameData.currentRound.winner === 'ties') {
+        updatedData.meta.ties = updatedData.meta.ties + 1;
+      } else {
+        updatedData.players?.forEach((player) => {
+          if (player.name === gameData.currentRound.winner) {
+            player.wins = player.wins + 1;
+          }
+        });
+      }
 
-    updatedData.currentRound = {
-      [player]: { status: 'ready' },
-      [otherPlayerName]: { status: 'ready' },
-    };
-    set(ref(database, 'games/' + gameId), updatedData);
+      updatedData.currentRound = {
+        winner: '',
+        players: {
+          [player]: { status: 'ready' },
+          [otherPlayerName]: { status: 'ready' },
+        },
+      };
+      set(ref(database, 'games/' + gameId), updatedData);
+    }
   };
 
   // Find Winner and set it on cloud store
@@ -102,10 +117,10 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     if (
       p2 &&
       gameData.currentRound &&
-      gameData.currentRound[player] &&
-      gameData.currentRound[player].value &&
-      gameData.currentRound[p2] &&
-      gameData.currentRound[p2].value &&
+      gameData.currentRound.players[player] &&
+      gameData.currentRound.players[player].value &&
+      gameData.currentRound.players[p2] &&
+      gameData.currentRound.players[p2].value &&
       !gameData.currentRound.winner
     ) {
       setWinner();
@@ -115,12 +130,15 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
   // Set Player ready for next round
   const setReady = () => {
     if (gameData) {
-      let updatedData = gameData;
-      updatedData.currentRound = {
-        ...gameData.currentRound,
-        ...{ [player]: { status: 'ready' } },
+      const { currentRound = {} } = gameData;
+      let updatedRound = {
+        ...currentRound,
+        players: {
+          ...(currentRound.players ? currentRound.players : {}),
+          ...{ [player]: { status: 'ready' } },
+        },
       };
-      set(ref(database, 'games/' + gameId), updatedData);
+      set(ref(database, 'games/' + gameId + '/currentRound'), updatedRound);
     }
   };
 
@@ -128,8 +146,8 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     if (
       gameData &&
       gameData.currentRound &&
-      gameData.currentRound[player] &&
-      gameData.currentRound[player].status === 'ready'
+      gameData.currentRound.players[player] &&
+      gameData.currentRound.players[player].status === 'ready'
     )
       return true;
     else return false;
@@ -142,8 +160,8 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
       gameData.players.forEach((p: Player) => {
         if (
           gameData.currentRound &&
-          gameData.currentRound[p.name] &&
-          gameData.currentRound[p.name].status === 'ready'
+          gameData.currentRound.players[p.name] &&
+          gameData.currentRound.players[p.name].status === 'ready'
         ) {
           // console.log(p.name, ' ready.');
         } else {
@@ -161,11 +179,11 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     if (
       gameData &&
       gameData.currentRound &&
-      gameData.currentRound[player] &&
-      gameData.currentRound[player].status === 'ready'
+      gameData.currentRound.players[player] &&
+      gameData.currentRound.players[player].status === 'ready'
     ) {
       let updatedData = { ...gameData };
-      updatedData.currentRound[player].value = value;
+      updatedData.currentRound.players[player].value = value;
       set(ref(database, 'games/' + gameId), updatedData);
     }
   };
@@ -179,14 +197,17 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
   const getScores = (): Score[] => {
     const currentPlayer = gameData?.players.find((p) => p.name === player);
     const otherPlayer = gameData?.players.find((p) => p.name !== player);
-    return [
-      { name: currentPlayer.name, score: currentPlayer.wins || 0 },
-      { name: 'Ties', score: gameData?.meta.ties },
-      { name: otherPlayer.name, score: otherPlayer.wins || 0 },
-    ];
+    if (gameData && currentPlayer && otherPlayer) {
+      return [
+        { name: currentPlayer.name, score: currentPlayer.wins || 0 },
+        { name: 'Ties', score: gameData.meta.ties },
+        { name: otherPlayer.name, score: otherPlayer.wins || 0 },
+      ];
+    } else return [];
   };
 
-  if (!gameData) return null;
+  if (!gameData && !otherPlayerName) return null;
+  const { currentRound } = gameData;
 
   return (
     <div>
@@ -197,22 +218,18 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
           `Welcome ${player}`
         )}
       </h3>
-      {gameData.players.length === 2 &&
-      allPlayersReady() &&
-      gameData.currentRound ? (
+      {gameData.players.length === 2 && allPlayersReady() && currentRound ? (
         <div>
           <HandsView
-            left={gameData.currentRound[player].value || ''}
+            left={currentRound.players[player].value || ''}
             right={
-              gameData.currentRound[player].value
-                ? gameData.currentRound[otherPlayerName].value || ''
+              currentRound.players[player].value
+                ? currentRound.players[otherPlayerName as string].value || ''
                 : ''
             }
-            {...(gameData.currentRound.winner
-              ? { reset: reset, duration: 3000 }
-              : {})}
+            {...(currentRound.winner ? { reset: reset, duration: 3000 } : {})}
           />
-          {!gameData.currentRound[player].value && (
+          {!currentRound.players[player].value && (
             <SelectGesture
               className={Styles.handsBar}
               size="small"
@@ -220,9 +237,9 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
             />
           )}
 
-          {gameData.currentRound.winner && (
+          {currentRound.winner && (
             <h1 className={Styles.winner}>
-              {getMessage(gameData.currentRound.winner)}{' '}
+              {getMessage(currentRound.winner)}{' '}
             </h1>
           )}
         </div>
