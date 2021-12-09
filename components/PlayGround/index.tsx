@@ -132,7 +132,7 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     if (gameData) {
       let updatedRound;
       const { currentRound } = gameData;
-      if (currentRound.players) {
+      if (currentRound && currentRound.players) {
         updatedRound = {
           ...currentRound,
           players: {
