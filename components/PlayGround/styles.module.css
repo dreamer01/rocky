@@ -1,0 +1,44 @@
+.ready {
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #36B37E;
+  border: 2px solid #36B37E;
+  border: none;
+  width: 100px; 
+  color: #fff;
+  margin-top: 20px;
+}
+
+
+.handsBar{
+  text-align: center;
+  animation: 100ms fadeIn ease-out;
+}
+
+.winner{
+  text-align: center;
+  margin-top: 50px;
+  animation: 1s appear ease-out;
+  text-transform: capitalize;
+}
+
+@keyframes appear {
+  0% {
+    opacity: 0;
+    transform:translate(0px, 3px);
+  }
+  100% {
+    opacity: 1;
+    transform:translate(0px, 0px);
+  }
+}
+
+@keyframes fadeIn {
+  0%{
+    opacity: 0;
+  }50% {
+    opacity: 0;
+  }100%{
+    opacity: 1;
+  }
+}
