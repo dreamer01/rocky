@@ -127,7 +127,7 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     }
   }, [gameData, player]);
 
-  // Set Player ready for next round
+  // TODO: Set Player ready for next round use online not ready
   const setReady = () => {
     if (gameData) {
       let updatedRound;
@@ -148,14 +148,11 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
   };
 
   const isPlayerReady = (): boolean => {
-    if (
-      gameData &&
-      gameData.currentRound &&
-      gameData.currentRound.players[player] &&
-      gameData.currentRound.players[player].status === 'ready'
-    )
-      return true;
-    else return false;
+    if (gameData && gameData.players) {
+      const playerDetails = gameData.players.find((p) => p.name === player);
+      if (playerDetails?.status === 'online') return true;
+      else return false;
+    } else return false;
   };
 
   // Player status check to start game
@@ -163,15 +160,11 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     let startGame = true;
     if (gameData && gameData.players.length === 2) {
       gameData.players.forEach((p: Player) => {
-        if (
-          gameData.currentRound &&
-          gameData.currentRound.players[p.name] &&
-          gameData.currentRound.players[p.name].status === 'ready'
-        ) {
+        if (p.status === 'online') {
           // console.log(p.name, ' ready.');
         } else {
           startGame = false;
-          return false;
+          return false; // Won't return from parent fxn will break forEach
         }
       });
     } else {
@@ -181,15 +174,14 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
   };
 
   const selectValue = (value: string): void => {
-    if (
-      gameData &&
-      gameData.currentRound &&
-      gameData.currentRound.players[player] &&
-      gameData.currentRound.players[player].status === 'ready'
-    ) {
-      let updatedData = { ...gameData };
-      updatedData.currentRound.players[player].value = value;
-      set(ref(database, 'games/' + gameId), updatedData);
+    if (gameData && gameData.currentRound) {
+      set(
+        ref(
+          database,
+          'games/' + gameId + '/currentRound/players/' + player + '/value',
+        ),
+        value,
+      );
     }
   };
 

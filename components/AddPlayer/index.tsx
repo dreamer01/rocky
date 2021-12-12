@@ -13,7 +13,7 @@ const AddPlayer = ({ addPlayer }: AddPlayerProps) => {
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     if (name && pin) {
-      addPlayer({ name, pin, wins: 0 });
+      addPlayer({ name, pin, wins: 0, status: 'online' });
     }
   };
 

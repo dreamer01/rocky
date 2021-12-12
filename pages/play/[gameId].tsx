@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { ref, onValue, set } from 'firebase/database';
+import { ref, onValue, set, onDisconnect } from 'firebase/database';
 import type { NextPage } from 'next';
 
 import { database } from '../../config/firebase';
@@ -15,6 +15,7 @@ export type Player = {
   name: string;
   pin: string;
   wins: number;
+  status: string;
 };
 
 export type GameData = {
@@ -44,9 +45,11 @@ const Game: NextPage = () => {
   const [loading, setLoading] = useState(true);
   const [showRules, toggleRules] = useState(false);
 
+  const gamesRef = ref(database, 'games/' + gameId);
+
+  // REVIEW: Don't use gameRef in dependency array.
   useEffect(() => {
     // Read game data from store
-    const gamesRef = ref(database, 'games/' + gameId);
     onValue(gamesRef, (snapshot) => {
       const data = snapshot.val();
       data && setGameData(data);
@@ -54,12 +57,47 @@ const Game: NextPage = () => {
     });
   }, [gameId]);
 
-  // Add Player if not in game data
+  useEffect(() => {
+    if (activePlayer && gameData) {
+      let updatedPlayers = gameData.players.map((p) => {
+        if (p.name === activePlayer) {
+          p.status = 'online';
+        }
+        return p;
+      });
+      set(gamesRef, { ...gameData, players: updatedPlayers });
+      updatedPlayers =
+        gameData &&
+        gameData.players.map((p) => {
+          if (p.name === activePlayer) p.status = 'offline';
+          return p;
+        });
+      if (updatedPlayers) {
+        const offlineData = { ...gameData, ...{ players: updatedPlayers } };
+        console.log(offlineData);
+        onDisconnect(gamesRef).update(offlineData);
+      }
+    }
+  }, [activePlayer, gameData]);
+
+  // Add Player if not in game data and update status
   const addPlayer = (player: Player): void => {
     const players = [...(gameData ? gameData.players : []), player];
     const meta = { ...(gameData ? gameData.meta : {}), ...{ ties: 0 } };
-    set(ref(database, 'games/' + gameId), {
+    const currentRound = {
+      ...(gameData ? gameData.currentRound : { winner: '' }),
+      players: {
+        ...(gameData
+          ? gameData.currentRound
+            ? gameData.currentRound.players
+            : {}
+          : {}),
+        ...{ [player.name]: { value: '' } },
+      },
+    };
+    set(gamesRef, {
       ...gameData,
+      currentRound,
       players,
       meta,
     });
@@ -71,12 +109,14 @@ const Game: NextPage = () => {
     setActivePlayer(playerSelected);
   };
 
+  // Check pin and update status
   const checkPin = (playerName: string) => {
     if (gameData) {
       const playerDetails =
         gameData.players.find((p) => p.name === playerName) || null;
-      if (playerDetails && playerDetails.pin === pin)
+      if (playerDetails && playerDetails.pin === pin) {
         setActivePlayer(playerName);
+      }
     }
   };
 
