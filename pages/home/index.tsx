@@ -6,78 +6,42 @@ import type { NextPage } from 'next';
 import ScoreBar from '../../components/ScoreBar';
 import SelectGesture from '../../components/SelectGesture';
 import HandsView from '../../components/HandsView';
+
 import Styles from './styles.module.css';
 
+const Header = (): JSX.Element => {
+  const getUuid = (): string => Math.random().toString(36).substring(2, 12);
+  return (
+    <div className={Styles.header}>
+      <Image src="/assets/logo.svg" alt="RPS" width={60} height={45} />
+
+      <Link href={`/play/${getUuid()}`} passHref>
+        <p className={Styles.playBtn}>Play With Friend</p>
+      </Link>
+    </div>
+  );
+};
+
+const initialState = {
+  userValue: '',
+  botValue: '',
+  winner: '',
+};
+
 const Home: NextPage = () => {
-  const [userValue, selectValue] = useState('');
-  const [botValue, setBotValue] = useState('');
-  const [winner, setWinner] = useState('');
-  const [countdown, setCountdown] = useState(5);
+  const [state, setState] = useState(initialState);
+
   const [scores, setScores] = useState([
     { name: 'You', score: 0 },
     { name: 'Ties', score: 0 },
     { name: 'Bot', score: 0 },
   ]);
 
-  const reset = () => {
-    selectValue('');
-    setBotValue('');
-    setWinner('');
-  };
-
-  // After UserValue Generate BotValue
-  useEffect(() => {
-    if (userValue) {
-      const botValue = Math.floor(Math.random() * 3) + 1;
-      switch (botValue) {
-        case 1:
-          setBotValue('rock');
-          break;
-        case 2:
-          setBotValue('paper');
-          break;
-        case 3:
-          setBotValue('scissors');
-          break;
-      }
-    }
-  }, [userValue]);
-
-  // Find Winner
-  useEffect(() => {
-    if (botValue && userValue) {
-      if (botValue === userValue) {
-        setWinner('tie');
-      } else {
-        switch (botValue) {
-          case 'rock':
-            if (userValue === 'paper') {
-              setWinner('user');
-            } else setWinner('bot');
-            break;
-          case 'paper':
-            if (userValue === 'scissors') {
-              setWinner('user');
-            } else setWinner('bot');
-            break;
-          case 'scissors':
-            if (userValue === 'rock') {
-              setWinner('user');
-            } else setWinner('bot');
-            break;
-          default:
-            setWinner('user');
-            break;
-        }
-      }
-    }
-  }, [botValue, userValue]);
-
   // Update Score and Reset Round
   useEffect(() => {
-    if (winner) {
+    if (state.winner) {
       let newScore = [...scores];
-      switch (winner) {
+      switch (state.winner) {
         case 'user':
           newScore[0].score = ++newScore[0].score;
           setScores(newScore);
@@ -92,10 +56,54 @@ const Home: NextPage = () => {
           break;
       }
     }
-  }, [winner]);
+  }, [state.winner]);
+
+  const handleValue = (userValue: string) => {
+    if (userValue) {
+      const botNumber = Math.floor(Math.random() * 3) + 1;
+      let botValue = '';
+      let winner = '';
+      switch (botNumber) {
+        case 1:
+          botValue = 'rock';
+          break;
+        case 2:
+          botValue = 'paper';
+          break;
+        case 3:
+          botValue = 'scissors';
+          break;
+      }
+      if (botValue === userValue) {
+        winner = 'tie';
+      } else {
+        switch (botValue) {
+          case 'rock':
+            if (userValue === 'paper') {
+              winner = 'user';
+            } else winner = 'bot';
+            break;
+          case 'paper':
+            if (userValue === 'scissors') {
+              winner = 'user';
+            } else winner = 'bot';
+            break;
+          case 'scissors':
+            if (userValue === 'rock') {
+              winner = 'user';
+            } else winner = 'bot';
+            break;
+          default:
+            winner = 'user';
+            break;
+        }
+      }
+      setState({ userValue, botValue, winner });
+    }
+  };
 
   const getMessage = (): string => {
-    switch (winner) {
+    switch (state.winner) {
       case 'user':
         return 'You Won 😎';
       case 'bot':
@@ -107,32 +115,25 @@ const Home: NextPage = () => {
     }
   };
 
-  const getUuid = (): string => Math.random().toString(36).substr(2, 12);
-
   return (
     <div className={Styles.container}>
       <div className={Styles.wrapper}>
-        <div className={Styles.header}>
-          <Image src="/assets/logo.svg" alt="RPS" width={100} height={75} />
-          <Link href={`/play/${getUuid()}`} passHref>
-            <p className={Styles.playBtn}>Play With Friend</p>
-          </Link>
-        </div>
+        <Header />
         <ScoreBar scores={scores} />
         <HandsView
-          left={userValue}
-          right={botValue}
-          reset={reset}
+          left={state.userValue}
+          right={state.botValue}
+          reset={() => setState(initialState)}
           duration={3000}
         />
-        {!userValue && (
+        {!state.userValue && (
           <SelectGesture
             className={Styles.handsBar}
             size="small"
-            onSelect={selectValue}
+            onSelect={handleValue}
           />
         )}
-        {winner && <h1 className={Styles.winner}>{getMessage()} </h1>}
+        {state.winner && <h1 className={Styles.winner}>{getMessage()} </h1>}
       </div>
     </div>
   );

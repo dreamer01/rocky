@@ -8,8 +8,9 @@ import { database } from '../../config/firebase';
 import AddPlayer from '../../components/AddPlayer';
 import SelectPlayer from '../../components/SelectPlayer';
 import PlayGround from '../../components/PlayGround';
-import Styles from './styles.module.css';
 import Rules from '../../components/Rules';
+
+import Styles from './styles.module.css';
 
 export type Player = {
   name: string;
@@ -126,7 +127,7 @@ const Game: NextPage = () => {
     <div className={Styles.container}>
       <div className={Styles.wrapper}>
         <div className={Styles.header}>
-          <Image src="/assets/logo.svg" alt="RPS" width={100} height={75} />
+          <Image src="/assets/logo.svg" alt="RPS" width={60} height={45} />
           <div>
             <p>Game : {gameId} </p>
             <button
