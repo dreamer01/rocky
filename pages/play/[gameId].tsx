@@ -78,7 +78,7 @@ const Game: NextPage = () => {
         onDisconnect(gamesRef).update(offlineData);
       }
     }
-  }, [activePlayer, gameData]);
+  }, [activePlayer]);
 
   // Add Player if not in game data and update status
   const addPlayer = (player: Player): void => {
