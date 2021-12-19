@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
+import type { Player } from '../../pages/play/[gameId]';
+import { STATUS } from '../../utils/constants';
 import Styles from './styles.module.css';
 
 type AddPlayerProps = {
-  addPlayer: any;
+  addPlayer: (player: Player) => void;
 };
 
 const AddPlayer = ({ addPlayer }: AddPlayerProps) => {
@@ -13,7 +15,7 @@ const AddPlayer = ({ addPlayer }: AddPlayerProps) => {
   const handleSubmit = (event: React.FormEvent): void => {
     event.preventDefault();
     if (name && pin) {
-      addPlayer({ name, pin, wins: 0, status: 'online' });
+      addPlayer({ name, pin, wins: 0, status: STATUS.online });
     }
   };
 
@@ -39,7 +41,6 @@ const AddPlayer = ({ addPlayer }: AddPlayerProps) => {
           onChange={(e) => setPin(e.target.value)}
         />
         <br />
-        {/* <input type="number" placeholder="Enter Pin" /> */}
         <button className={Styles.btn} type="submit">
           Add
         </button>

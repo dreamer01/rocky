@@ -23,7 +23,7 @@ const HandsView = ({
       <div className={`${Styles.imageView} ${left ? '' : Styles.animateLeft} `}>
         {left ? (
           <Image
-            src={`/assets/left-${left}.webp`}
+            src={`/assets/left-${left.toLowerCase()}.webp`}
             className={Styles.selectedOption}
             alt="Hand"
             width={1080}
@@ -46,7 +46,7 @@ const HandsView = ({
       >
         {right ? (
           <Image
-            src={`/assets/right-${right}.webp`}
+            src={`/assets/right-${right.toLowerCase()}.webp`}
             className={Styles.selectedOption}
             alt="Hand"
             width={1080}

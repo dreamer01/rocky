@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import useInterval from '../../utils/useInterval';
 import Styles from './styles.module.css';
