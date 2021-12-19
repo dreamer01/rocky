@@ -5,7 +5,7 @@ import Styles from './styles.module.css';
 
 type SelectPlayerProps = {
   players: Player[];
-  selectPlayer: any;
+  selectPlayer: (playerName: string) => void;
 };
 
 const SelectPlayer = ({ players, selectPlayer }: SelectPlayerProps) => {

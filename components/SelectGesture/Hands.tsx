@@ -1,11 +1,13 @@
 import Image from 'next/image';
 
+import type { HandSizes, Values } from '../../utils/constants';
+
 import Styles from './styles.module.css';
 
 type HandsProps = {
-  size: 'small' | 'large';
-  type: string;
-  onSelect: (value: string) => void;
+  size: HandSizes;
+  type: Values;
+  onSelect: (value: Values) => void;
 };
 
 const Hands = ({ size = 'small', type, onSelect }: HandsProps): JSX.Element => {
@@ -15,7 +17,7 @@ const Hands = ({ size = 'small', type, onSelect }: HandsProps): JSX.Element => {
       onClick={() => onSelect(type)}
     >
       <Image
-        src={`/assets/icon-${type}.svg`}
+        src={`/assets/icon-${type.toLowerCase()}.svg`}
         alt={type}
         width={98}
         height={118}
