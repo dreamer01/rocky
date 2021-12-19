@@ -9,6 +9,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .modal{
@@ -26,4 +27,16 @@
 
 .close{
   cursor: pointer;
+}
+
+
+.readyBtn{
+  padding: 8px 12px;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 2px solid #36B37E;
+  border: none;
+  width: 100px; 
+  color: darkslateblue;
+  margin-top: 20px;
 }

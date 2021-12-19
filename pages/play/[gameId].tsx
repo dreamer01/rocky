@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { ref, onValue, set, onDisconnect } from 'firebase/database';
 import type { NextPage } from 'next';
@@ -127,7 +128,15 @@ const Game: NextPage = () => {
     <div className={Styles.container}>
       <div className={Styles.wrapper}>
         <div className={Styles.header}>
-          <Image src="/assets/logo.svg" alt="RPS" width={60} height={45} />
+          <Link href={'/'} passHref>
+            <Image
+              className={Styles.cursor}
+              src="/assets/logo.svg"
+              alt="RPS"
+              width={60}
+              height={45}
+            />
+          </Link>
           <div>
             <p>Game : {gameId} </p>
             <button

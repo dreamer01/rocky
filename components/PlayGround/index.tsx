@@ -1,14 +1,14 @@
-import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { ref, onValue, set, runTransaction } from 'firebase/database';
 
-import { database } from '../../config/firebase';
 import type { Player, GameData } from '../../pages/play/[gameId]';
-import Styles from './styles.module.css';
+import { database } from '../../config/firebase';
+import { VALUES } from '../../utils/constants';
 import HandsView from '../HandsView';
 import SelectGesture from '../SelectGesture';
 import ScoreBar from '../ScoreBar';
-import type { Score } from '../ScoreBar';
+
+import Styles from './styles.module.css';
 
 type PlayGroundProps = {
   player: string;
@@ -34,24 +34,26 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
           gameData.currentRound.players[otherPlayerName].value
       ) {
         switch (currentPlayer.value) {
-          case 'rock':
-            if (
-              gameData.currentRound.players[otherPlayerName].value === 'paper'
-            ) {
-              winner = otherPlayerName;
-            } else winner = player;
-            break;
-          case 'paper':
+          case VALUES.ROCK:
             if (
               gameData.currentRound.players[otherPlayerName].value ===
-              'scissors'
+              VALUES.PAPER
             ) {
               winner = otherPlayerName;
             } else winner = player;
             break;
-          case 'scissors':
+          case VALUES.PAPER:
             if (
-              gameData.currentRound.players[otherPlayerName].value === 'rock'
+              gameData.currentRound.players[otherPlayerName].value ===
+              VALUES.SCISSOR
+            ) {
+              winner = otherPlayerName;
+            } else winner = player;
+            break;
+          case VALUES.SCISSOR:
+            if (
+              gameData.currentRound.players[otherPlayerName].value ===
+              VALUES.ROCK
             ) {
               winner = otherPlayerName;
             } else winner = player;
@@ -191,16 +193,16 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     else return `${winner} Won 😔`;
   };
 
-  const getScores = (): Score[] => {
+  const getScores = () => {
     const currentPlayer = gameData?.players.find((p) => p.name === player);
     const otherPlayer = gameData?.players.find((p) => p.name !== player);
     if (gameData && currentPlayer && otherPlayer) {
-      return [
-        { name: currentPlayer.name, score: currentPlayer.wins || 0 },
-        { name: 'Ties', score: gameData.meta.ties },
-        { name: otherPlayer.name, score: otherPlayer.wins || 0 },
-      ];
-    } else return [];
+      return {
+        [currentPlayer.name]: currentPlayer.wins || 0,
+        ['ties' as string]: gameData.meta.ties || 0,
+        [otherPlayer.name]: otherPlayer.wins || 0,
+      };
+    } else return {};
   };
 
   if (!gameData && !otherPlayerName) return null;
@@ -210,7 +212,7 @@ const PlayGround = ({ gameId, player }: PlayGroundProps) => {
     <div>
       <h3>
         {allPlayersReady() ? (
-          <ScoreBar scores={getScores()} />
+          <ScoreBar activePlayer={player} score={getScores()} />
         ) : (
           `Welcome ${player}`
         )}

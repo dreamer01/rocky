@@ -15,6 +15,10 @@
   align-items: center;
 }
 
+.cursor{
+  cursor: pointer;
+}
+
 .playground{
   margin-top: 60px;
   /* display: flex;
