@@ -18,9 +18,9 @@ const Header = (): JSX.Element => {
     <div className={Styles.header}>
       <Image src="/assets/logo.svg" alt="RPS" width={60} height={45} />
 
-      <Link href={`/play/${getUuid()}`} passHref>
+      {/* <Link href={`/play/${getUuid()}`} passHref>
         <p className={Styles.playBtn}>Play With Friend</p>
-      </Link>
+      </Link> */}
     </div>
   );
 };
