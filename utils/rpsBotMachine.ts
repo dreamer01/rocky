@@ -33,20 +33,23 @@ const initialValues = {
   winner: '',
 };
 
+const initialScore = {
+  bot: 0,
+  user: 0,
+  ties: 0,
+};
+
 const rpsMachine = createMachine<RPSContext, RPSEvent, RPSState>(
   {
     id: 'rps',
     initial: 'idle',
     context: {
       ...initialValues,
-      score: {
-        bot: 0,
-        user: 0,
-        ties: 0,
-      },
+      score: initialScore,
     },
     states: {
       idle: {
+        entry: 'setLocalStorage',
         on: {
           READY: 'ready',
         },
@@ -85,6 +88,17 @@ const rpsMachine = createMachine<RPSContext, RPSEvent, RPSState>(
       },
     },
     actions: {
+      setLocalStorage: assign({
+        score: (context, evt) => {
+          if (typeof window !== 'undefined') {
+            const scoreStr = window.localStorage.getItem('rps#score');
+            if (scoreStr) {
+              const score = JSON.parse(scoreStr);
+              return score;
+            } else return initialScore;
+          }
+        },
+      }),
       setValues: assign<RPSContext, RPSEvent>({
         userValue: (_, evt: RPSEvent) => {
           if (evt.value) return evt.value;
@@ -143,6 +157,12 @@ const rpsMachine = createMachine<RPSContext, RPSEvent, RPSState>(
           const { score, winner } = ctx;
           let updateScore = { ...score };
           updateScore[winner] = updateScore[winner] + 1;
+          if (typeof window !== 'undefined') {
+            window.localStorage.setItem(
+              'rps#score',
+              JSON.stringify(updateScore),
+            );
+          }
           return updateScore;
         },
       }),
